@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AuraSync - DJ Music Player</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    /* ==========================================
+       CSS VARIABLES & THEMES (ELEGANT REDESIGN)
+       ========================================== */
+    :root, [data-theme="dark"] {
+      --bg-page: #050507;
+      --bg-surface: rgba(18, 18, 24, 0.6);
+      --bg-surface-hover: rgba(28, 28, 38, 0.8);
+      --bg-element: rgba(255, 255, 255, 0.04);
+      --bg-element-hover: rgba(255, 255, 255, 0.08);
+      --bg-active: rgba(255, 255, 255, 0.12);
+      
+      --border-color: rgba(255, 255, 255, 0.04);
+      --border-light: rgba(255, 255, 255, 0.02);
+      --border-active: rgba(255, 255, 255, 0.15);
+      
+      --text-primary: #ffffff;
+      --text-secondary: #a1a1aa;
+      --text-muted: #71717a;
+      
+      --accent-color: #ffffff;
+      --accent-hover: #e4e4e7;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.8);
+      --shadow-glow: 0 8px 24px rgba(255, 255, 255, 0.15);
+      --glass-bg: rgba(12, 12, 16, 0.65);
+      --glass-blur: 24px;
+      
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 12px;
+      --radius-full: 50%;
+    }
+
+    /* NUEVO TEMA: Spotify */
+    [data-theme="spotify"] {
+      --bg-page: #000000;
+      --bg-surface: rgba(18, 18, 18, 0.8);
+      --bg-surface-hover: rgba(40, 40, 40, 0.9);
+      --bg-element: rgba(255, 255, 255, 0.05);
+      --bg-element-hover: rgba(255, 255, 255, 0.1);
+      --bg-active: rgba(30, 215, 96, 0.15);
+      
+      --border-color: rgba(255, 255, 255, 0.05);
+      --border-light: rgba(255, 255, 255, 0.02);
+      --border-active: #1ed760;
+      
+      --text-primary: #ffffff;
+      --text-secondary: #b3b3b3;
+      --text-muted: #535353;
+      
+      --accent-color: #1ed760;
+      --accent-hover: #1fdf64;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.9);
+      --shadow-glow: 0 8px 24px rgba(30, 215, 96, 0.3);
+      --glass-bg: rgba(18, 18, 18, 0.85);
+    }
+
+    /* NUEVO TEMA: Midnight */
+    [data-theme="midnight"] {
+      --bg-page: #020617;
+      --bg-surface: rgba(15, 23, 42, 0.7);
+      --bg-surface-hover: rgba(30, 41, 59, 0.8);
+      --bg-element: rgba(255, 255, 255, 0.03);
+      --bg-element-hover: rgba(255, 255, 255, 0.08);
+      --bg-active: rgba(56, 189, 248, 0.2);
+      
+      --border-color: rgba(51, 65, 85, 0.4);
+      --border-light: rgba(51, 65, 85, 0.2);
+      --border-active: #38bdf8;
+      
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #475569;
+      
+      --accent-color: #38bdf8;
+      --accent-hover: #7dd3fc;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.8);
+      --shadow-glow: 0 8px 24px rgba(56, 189, 248, 0.4);
+      --glass-bg: rgba(15, 23, 42, 0.75);
+    }
+
+    [data-theme="light"] {
+      --bg-page: #e2e8f0;
+      --bg-surface: rgba(255, 255, 255, 0.7);
+      --bg-surface-hover: rgba(255, 255, 255, 0.9);
+      --bg-element: rgba(0, 0, 0, 0.03);
+      --bg-element-hover: rgba(0, 0, 0, 0.06);
+      --bg-active: rgba(0, 0, 0, 0.1);
+      
+      --border-color: rgba(0, 0, 0, 0.05);
+      --border-light: rgba(0, 0, 0, 0.02);
+      --border-active: rgba(0, 0, 0, 0.15);
+      
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      
+      --accent-color: #0f172a;
+      --accent-hover: #000000;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.1);
+      --shadow-glow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      --glass-bg: rgba(255, 255, 255, 0.75);
+    }
+
+    [data-theme="transparent"] {
+      --bg-page: #0f172a;
+      --bg-surface: rgba(15, 23, 42, 0.3);
+      --bg-surface-hover: rgba(255, 255, 255, 0.05);
+      --bg-element: rgba(255, 255, 255, 0.04);
+      --bg-element-hover: rgba(255, 255, 255, 0.08);
+      --bg-active: rgba(255, 255, 255, 0.15);
+      
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.04);
+      --border-active: rgba(255, 255, 255, 0.25);
+      
+      --text-primary: #ffffff;
+      --text-secondary: #d1d5db;
+      --text-muted: #9ca3af;
+      
+      --accent-color: #ffffff;
+      --accent-hover: #f3f4f6;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.6);
+      --shadow-glow: 0 8px 24px rgba(255, 255, 255, 0.2);
+      --glass-bg: rgba(15, 23, 42, 0.35);
+    }
+
+    [data-theme="cyberpunk"] {
+      --bg-page: #fcee0a;
+      --bg-surface: rgba(0, 0, 0, 0.8);
+      --bg-surface-hover: rgba(20, 20, 20, 0.9);
+      --bg-element: rgba(255, 255, 255, 0.05);
+      --bg-element-hover: rgba(255, 255, 255, 0.1);
+      --bg-active: rgba(255, 0, 60, 0.2);
+      
+      --border-color: rgba(0, 255, 255, 0.2);
+      --border-light: rgba(0, 255, 255, 0.05);
+      --border-active: rgba(255, 0, 60, 0.5);
+      
+      --text-primary: #00ffff;
+      --text-secondary: #fcee0a;
+      --text-muted: #aaaaaa;
+      
+      --accent-color: #ff003c;
+      --accent-hover: #ff3366;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.8);
+      --shadow-glow: 0 8px 24px rgba(255, 0, 60, 0.4);
+      --glass-bg: rgba(0, 0, 0, 0.85);
+    }
+
+    [data-theme="neon"] {
+      --bg-page: #0b0213;
+      --bg-surface: rgba(23, 5, 41, 0.7);
+      --bg-surface-hover: rgba(38, 9, 69, 0.8);
+      --bg-element: rgba(255, 255, 255, 0.04);
+      --bg-element-hover: rgba(255, 255, 255, 0.08);
+      --bg-active: rgba(255, 0, 255, 0.15);
+      
+      --border-color: rgba(138, 43, 226, 0.3);
+      --border-light: rgba(138, 43, 226, 0.1);
+      --border-active: rgba(0, 255, 255, 0.5);
+      
+      --text-primary: #ff00ff;
+      --text-secondary: #00ffff;
+      --text-muted: #8855bb;
+      
+      --accent-color: #00ffff;
+      --accent-hover: #ffffff;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.7);
+      --shadow-glow: 0 8px 24px rgba(0, 255, 255, 0.3);
+      --glass-bg: rgba(23, 5, 41, 0.75);
+    }
+
+    [data-theme="forest"] {
+      --bg-page: #0a1710;
+      --bg-surface: rgba(17, 38, 27, 0.65);
+      --bg-surface-hover: rgba(23, 54, 38, 0.8);
+      --bg-element: rgba(255, 255, 255, 0.04);
+      --bg-element-hover: rgba(255, 255, 255, 0.08);
+      --bg-active: rgba(74, 222, 128, 0.15);
+      
+      --border-color: rgba(74, 222, 128, 0.1);
+      --border-light: rgba(255, 255, 255, 0.02);
+      --border-active: rgba(74, 222, 128, 0.4);
+      
+      --text-primary: #e2f0e9;
+      --text-secondary: #a7d1b9;
+      --text-muted: #6b9e82;
+      
+      --accent-color: #4ade80;
+      --accent-hover: #86efac;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.8);
+      --shadow-glow: 0 8px 24px rgba(74, 222, 128, 0.2);
+      --glass-bg: rgba(17, 38, 27, 0.7);
+    }
+
+    [data-theme="sunset"] {
+      --bg-page: #2a0a18;
+      --bg-surface: rgba(66, 17, 35, 0.65);
+      --bg-surface-hover: rgba(92, 24, 49, 0.8);
+      --bg-element: rgba(255, 255, 255, 0.04);
+      --bg-element-hover: rgba(255, 255, 255, 0.08);
+      --bg-active: rgba(251, 146, 60, 0.15);
+      
+      --border-color: rgba(251, 146, 60, 0.1);
+      --border-light: rgba(255, 255, 255, 0.02);
+      --border-active: rgba(251, 146, 60, 0.4);
+      
+      --text-primary: #ffedd5;
+      --text-secondary: #fdba74;
+      --text-muted: #f472b6;
+      
+      --accent-color: #fb923c;
+      --accent-hover: #fed7aa;
+      
+      --shadow-primary: 0 32px 64px -12px rgba(0, 0, 0, 0.8);
+      --shadow-glow: 0 8px 24px rgba(251, 146, 60, 0.2);
+      --glass-bg: rgba(66, 17, 35, 0.7);
+    }
+
+    /* ==========================================
+       GLOBAL STYLES
+       ========================================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.4s ease, color 0.4s ease;
+      position: relative;
+      padding: 24px;
+    }
+
+    .custom-bg-layer {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      background-size: cover; background-position: center;
+      z-index: -1; opacity: 0.5; pointer-events: none;
+      transition: background-image 0.8s ease;
+    }
+
+    /* Contenedor Principal con Resplandor de Visualizador */
+    .player-container {
+      width: 100%; max-width: 440px;
+      background: var(--glass-bg);
+      backdrop-filter: blur(var(--glass-blur)); -webkit-backdrop-filter: blur(var(--glass-blur));
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 32px 28px;
+      /* Glow dinámico del visualizador */
+      box-shadow: 0 0 calc(var(--beat-glow-opacity, 0) * 80px) var(--accent-color), var(--shadow-primary);
+      display: flex; flex-direction: column; gap: 20px;
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.1s ease-out;
+    }
+
+    /* Header */
+    .player-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px; }
+    .logo-area { display: flex; align-items: center; gap: 8px; }
+    .logo-icon { color: var(--accent-color); filter: drop-shadow(0 0 8px var(--accent-color)); width: 28px; height: 28px; }
+    .logo-text { font-size: 1.4rem; background: linear-gradient(135deg, var(--text-primary), var(--text-muted)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: 0.5px; filter: drop-shadow(0 2px 10px rgba(255,255,255,0.1)); }
+    .logo-text .fw-light { font-weight: 300; }
+    .logo-text .fw-bold { font-weight: 700; }
+
+    .header-actions { display: flex; gap: 8px; position: relative; }
+    .icon-btn {
+      background: var(--bg-element); color: var(--text-secondary);
+      width: 40px; height: 40px; border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; border: 1px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .icon-btn:hover { background: var(--bg-element-hover); color: var(--text-primary); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); }
+
+    /* Settings Dropdown */
+    .dropdown-menu {
+      position: absolute; top: 100%; right: 0; margin-top: 12px;
+      background: var(--bg-surface); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color); border-radius: var(--radius-md); box-shadow: var(--shadow-primary);
+      display: flex; flex-direction: column; min-width: 220px; z-index: 50; overflow: hidden;
+      opacity: 0; visibility: hidden; transform: translateY(-10px) scale(0.95); transform-origin: top right;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .dropdown-menu.show { opacity: 1; visibility: visible; transform: translateY(0) scale(1); }
+    .dropdown-item {
+      background: transparent; border: none; color: var(--text-primary);
+      padding: 14px 20px; font-size: 0.9rem; font-weight: 500; text-align: left; cursor: pointer;
+      display: flex; align-items: center; gap: 12px; transition: background 0.2s; text-decoration: none;
+    }
+    .dropdown-item:hover { background: var(--bg-element-hover); }
+    .dropdown-item i { width: 18px; height: 18px; color: var(--text-secondary); }
+    .dropdown-header { padding: 16px 20px 8px 20px; font-size: 0.75rem; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1.5px; }
+
+    .theme-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; padding: 12px 20px 16px 20px; }
+    .theme-btn {
+      width: 26px; height: 26px; border-radius: var(--radius-full); cursor: pointer; border: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; outline: none; position: relative;
+    }
+    .theme-btn:hover { transform: scale(1.15) translateY(-2px); box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25); }
+    .theme-btn.active { transform: scale(1.2); box-shadow: 0 0 0 2px var(--bg-page), 0 0 0 4px var(--text-primary); }
+    .dropdown-divider { border: none; border-top: 1px solid var(--border-color); margin: 4px 0; }
+
+    /* Views & Tabs */
+    .view-tabs { display: flex; gap: 6px; background: var(--bg-element); padding: 6px; border-radius: var(--radius-lg); margin-bottom: 8px; }
+    .view-tab-btn {
+      flex: 1; background: transparent; border: none; color: var(--text-secondary);
+      font-size: 0.9rem; font-weight: 600; cursor: pointer; padding: 10px 4px; border-radius: var(--radius-md); transition: all 0.3s ease;
+    }
+    .view-tab-btn:hover { color: var(--text-primary); }
+    .view-tab-btn.active { background: var(--bg-surface-hover); color: var(--text-primary); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); }
+    .view-section { display: none; flex-direction: column; gap: 20px; animation: fadeIn 0.4s ease forwards; }
+    .view-section.active { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Album Art & Visualizer Wrapper */
+    .main-display { position: relative; width: 100%; height: 280px; display: flex; align-items: center; justify-content: center; }
+    .album-art-wrapper {
+      position: relative; width: 240px; height: 240px; display: flex; align-items: center; justify-content: center;
+      /* Escala dinámica del visualizador de bajos */
+      transform: scale(var(--beat-scale, 1));
+      transition: transform 0.08s cubic-bezier(0.1, 0.8, 0.3, 1); 
+    }
+    .album-art-container {
+      width: 100%; height: 100%; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted); background: var(--bg-element);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 0 0 6px rgba(0, 0, 0, 0.3);
+      border: 2px solid var(--border-color); overflow: hidden;
+      animation: spinRecord 15s linear infinite; animation-play-state: paused;
+    }
+    .album-art-container.playing { animation-play-state: running; }
+    @keyframes spinRecord { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .album-art-container img, #default-art-icon { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 0.6s ease; border-radius: 50%; }
+
+    /* Track Info */
+    .track-info { text-align: center; padding: 0 12px; margin-top: 4px; }
+    .track-title-row { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
+    .track-info h2 { font-size: 1.25rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 80%; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .track-info p { font-size: 0.9rem; color: var(--text-muted); font-weight: 500; }
+    .add-to-album-btn { background: var(--bg-element); border: none; color: var(--text-secondary); width: 28px; height: 28px; border-radius: var(--radius-full); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease; }
+    .add-to-album-btn:hover { background: var(--bg-element-hover); color: var(--text-primary); transform: scale(1.1) translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+    /* Sliders */
+    .slider-row { display: flex; align-items: center; gap: 16px; font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); margin-top: 8px; }
+    .volume-row { justify-content: center; margin-top: 0; opacity: 0.8; transition: opacity 0.3s ease; }
+    .volume-row:hover { opacity: 1; }
+    .volume-row input[type="range"] { max-width: 140px; }
+    input[type="range"] { flex: 1; appearance: none; height: 6px; background: var(--bg-element-hover); border-radius: 4px; outline: none; cursor: pointer; overflow: hidden; }
+    input[type="range"]::-webkit-slider-thumb { appearance: none; width: 14px; height: 14px; background: var(--text-primary); border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.3); transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.3); }
+
+    /* Controls */
+    .controls { display: flex; justify-content: center; align-items: center; gap: 20px; margin: 8px 0; }
+    .control-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-full); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .control-btn:hover { color: var(--text-primary); background: var(--bg-element); transform: scale(1.1); }
+    .control-btn.active-state { color: var(--accent-color); background: var(--bg-element-hover); box-shadow: inset 0 0 0 1px var(--border-active); }
+    .play-btn { background: var(--text-primary); color: var(--bg-page); width: 60px; height: 60px; border: none; box-shadow: var(--shadow-glow); }
+    .play-btn:hover { transform: scale(1.08) translateY(-2px); box-shadow: 0 12px 28px rgba(0,0,0,0.2), var(--shadow-glow); }
+
+    /* Saludo y Contador Spotify */
+    .greeting-area { margin-bottom: 12px; }
+    .greeting-text { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.5px; }
+    .song-count { font-size: 0.85rem; color: var(--text-secondary); font-weight: 500; }
+
+    /* Barra de Búsqueda */
+    .search-container { position: relative; margin-bottom: 12px; }
+    .search-container i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); width: 18px; height: 18px; }
+    .search-input { width: 100%; background: var(--bg-element); border: 1px solid var(--border-color); color: var(--text-primary); padding: 12px 16px 12px 42px; border-radius: 50px; font-size: 0.9rem; font-weight: 500; outline: none; transition: all 0.3s ease; }
+    .search-input::placeholder { color: var(--text-muted); }
+    .search-input:focus { background: var(--bg-element-hover); border-color: var(--accent-color); box-shadow: 0 0 0 3px rgba(255,255,255,0.05); }
+
+    /* Quick Actions */
+    .quick-actions-bar { display: flex; gap: 8px; margin-bottom: 12px; }
+    .quick-action-btn { background: var(--bg-element); border: 1px solid transparent; color: var(--text-secondary); padding: 6px 12px; font-size: 0.8rem; font-weight: 500; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 6px; transition: all 0.3s ease; }
+    .quick-action-btn:hover { background: var(--bg-element-hover); color: var(--text-primary); }
+    .quick-action-btn i { width: 14px; height: 14px; }
+    
+    /* Albums Bar */
+    .albums-bar { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 8px; scrollbar-width: none; }
+    .albums-bar::-webkit-scrollbar { display: none; }
+    .album-tab { background: var(--bg-element); border: 1px solid transparent; color: var(--text-secondary); padding: 8px 16px; font-size: 0.85rem; font-weight: 500; border-radius: var(--radius-sm); cursor: pointer; white-space: nowrap; transition: all 0.3s ease; }
+    .album-tab:hover { background: var(--bg-element-hover); color: var(--text-primary); transform: translateY(-1px); }
+    .album-tab.active { background: var(--bg-active); color: var(--text-primary); border-color: var(--border-active); box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); }
+
+    /* Playlist Layout */
+    .playlist-layout { display: flex; gap: 12px; height: 320px; }
+    .alphabet-sidebar { width: 28px; display: flex; flex-direction: column; align-items: center; overflow-y: auto; background: var(--bg-element); border-radius: var(--radius-md); padding: 8px 0; scrollbar-width: none; }
+    .alphabet-sidebar::-webkit-scrollbar { display: none; }
+    .alpha-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.75rem; font-weight: 600; width: 100%; padding: 4px 0; cursor: pointer; text-align: center; transition: color 0.2s, transform 0.2s; }
+    .alpha-btn:hover { color: var(--text-primary); transform: scale(1.2); }
+
+    .playlist { flex: 1; list-style: none; overflow-y: auto; padding-right: 8px; scrollbar-width: thin; scrollbar-color: var(--border-active) transparent; }
+    .playlist::-webkit-scrollbar { width: 4px; }
+    .playlist::-webkit-scrollbar-thumb { background: var(--border-active); border-radius: 4px; }
+    .playlist-item { padding: 14px 16px; border-radius: var(--radius-sm); margin-bottom: 8px; background: var(--bg-element); border: 1px solid transparent; cursor: pointer; display: flex; flex-direction: column; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .playlist-item:hover { background: var(--bg-element-hover); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,0.1); }
+    .playlist-item.active { background: var(--bg-active); border-color: var(--border-active); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .playlist-item span { font-size: 0.95rem; font-weight: 500; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .playlist-item small { font-size: 0.8rem; color: var(--text-secondary); margin-top: 4px; }
+
+    /* Empty State */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; text-align: center; gap: 12px; opacity: 0.8; }
+    .empty-state-icon { width: 48px; height: 48px; color: var(--text-muted); margin-bottom: 4px; }
+    .empty-state-text { font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; }
+    .empty-state-btn { background: var(--bg-active); border: 1px solid var(--border-active); color: var(--text-primary); padding: 8px 16px; font-size: 0.85rem; font-weight: 600; border-radius: var(--radius-sm); cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+    .empty-state-btn:hover { background: var(--bg-element-hover); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+
+    /* Toasts Notificaciones */
+    .toast-container { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; gap: 10px; z-index: 1000; pointer-events: none; }
+    .toast { background: var(--accent-color); color: var(--bg-page); padding: 12px 24px; border-radius: 50px; font-weight: 600; font-size: 0.9rem; box-shadow: 0 8px 32px rgba(0,0,0,0.4); animation: toastSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1), toastFadeOut 0.4s ease 2.6s forwards; display: flex; align-items: center; gap: 10px; }
+    .toast i { width: 18px; height: 18px; }
+    @keyframes toastSlideUp { from { transform: translateY(40px) scale(0.9); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    @keyframes toastFadeOut { from { opacity: 1; transform: translateY(0); } to { opacity: 0; transform: translateY(-20px); } }
+
+    /* Modal */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0, 0, 0, 0.6); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); display: flex; justify-content: center; align-items: center; z-index: 100; opacity: 1; visibility: visible; transition: opacity 0.3s ease; }
+    .modal-overlay.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .modal-card { width: 90%; max-width: 340px; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-primary); transform: scale(1); transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+    .modal-overlay.hidden .modal-card { transform: scale(0.95); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid var(--border-light); padding-bottom: 16px; font-weight: 600; font-size: 1.1rem; }
+    .close-modal-btn { background: transparent; border: none; color: var(--text-secondary); cursor: pointer; transition: color 0.2s; }
+    .close-modal-btn:hover { color: var(--text-primary); }
+    .modal-album-list { display: flex; flex-direction: column; gap: 10px; max-height: 240px; overflow-y: auto; padding-right: 4px; }
+    .modal-album-btn { background: var(--bg-element); border: none; color: var(--text-primary); padding: 14px 16px; border-radius: var(--radius-sm); font-size: 0.95rem; font-weight: 500; text-align: left; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.3s ease; }
+    .modal-album-btn:hover { background: var(--bg-element-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  </style>
+</head>
+<body>
+
+  <!-- Custom Background Layer -->
+  <div id="custom-bg-layer" class="custom-bg-layer"></div>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <div class="player-container">
+    <!-- Header -->
+    <div class="player-header">
+      <div class="logo-area">
+        <i data-lucide="audio-lines" class="logo-icon"></i>
+        <span class="logo-text"><span class="fw-light">Aura</span><span class="fw-bold">Sync</span></span>
+      </div>
+      <div class="header-actions">
+        <!-- Hidden Inputs for File Uploads -->
+        <input type="file" id="bg-upload" accept="image/*" style="display: none;">
+        <input type="file" id="file-upload" accept="audio/*" multiple style="display: none;">
+        <input type="file" id="folder-upload" webkitdirectory directory multiple style="display: none;">
+
+        <button id="btn-settings-toggle" class="icon-btn" title="Ajustes">
+          <i data-lucide="settings"></i>
+        </button>
+        
+        <!-- Settings Dropdown -->
+        <div id="settings-dropdown" class="dropdown-menu">
+          <div class="dropdown-header">Temas</div>
+          <div class="theme-grid">
+            <button class="theme-btn active" data-theme="dark" style="background: linear-gradient(135deg, #181822, #050507);" title="Oscuro"></button>
+            <button class="theme-btn" data-theme="spotify" style="background: linear-gradient(135deg, #121212, #1ed760);" title="Spotify"></button>
+            <button class="theme-btn" data-theme="midnight" style="background: linear-gradient(135deg, #0f172a, #38bdf8);" title="Midnight"></button>
+            <button class="theme-btn" data-theme="light" style="background: linear-gradient(135deg, #ffffff, #e2e8f0);" title="Claro"></button>
+            <button class="theme-btn" data-theme="cyberpunk" style="background: linear-gradient(135deg, #fcee0a, #ff003c);" title="Cyberpunk"></button>
+            <button class="theme-btn" data-theme="neon" style="background: linear-gradient(135deg, #ff00ff, #8a2be2);" title="Neón"></button>
+            <button class="theme-btn" data-theme="forest" style="background: linear-gradient(135deg, #4ade80, #143021);" title="Bosque"></button>
+            <button class="theme-btn" data-theme="ocean" style="background: linear-gradient(135deg, #38bdf8, #092a46);" title="Océano"></button>
+            <button class="theme-btn" data-theme="sunset" style="background: linear-gradient(135deg, #fb923c, #8c244b);" title="Atardecer"></button>
+            <button class="theme-btn" data-theme="transparent" style="background: linear-gradient(135deg, rgba(255,255,255,0.4), rgba(255,255,255,0.1));" title="Cristal"></button>
+          </div>
+          <hr class="dropdown-divider">
+          <label for="bg-upload" class="dropdown-item"><i data-lucide="image"></i> Fondo Personalizado</label>
+          <button id="btn-create-album" class="dropdown-item"><i data-lucide="folder-plus"></i> Crear Álbum</button>
+          <label for="file-upload" class="dropdown-item"><i data-lucide="plus"></i> Añadir Música</label>
+          <button id="btn-clear-library" class="dropdown-item" style="color: #ef4444;"><i data-lucide="trash-2"></i> Borrar Biblioteca</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Tabs -->
+    <div class="view-tabs">
+      <button id="tab-player" class="view-tab-btn active">Reproductor</button>
+      <button id="tab-playlist" class="view-tab-btn">Cola</button>
+    </div>
+
+    <!-- PLAYER VIEW -->
+    <div id="view-player" class="view-section active">
+      <!-- Main Display (Visualizer Wrapper + Album Art) -->
+      <div class="main-display">
+        <div id="album-art-wrapper" class="album-art-wrapper">
+          <div id="album-art-box" class="album-art-container">
+            <svg id="default-art-icon" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="100" cy="100" r="100" fill="#121212" />
+              <circle cx="100" cy="100" r="90" fill="none" stroke="#222" stroke-width="2" />
+              <circle cx="100" cy="100" r="80" fill="none" stroke="#2a2a2a" stroke-width="1.5" />
+              <circle cx="100" cy="100" r="70" fill="none" stroke="#222" stroke-width="2" />
+              <circle cx="100" cy="100" r="60" fill="none" stroke="#2a2a2a" stroke-width="1.5" />
+              <circle cx="100" cy="100" r="50" fill="none" stroke="#222" stroke-width="2" />
+              <circle cx="100" cy="100" r="36" fill="var(--accent-color)" />
+              <circle cx="100" cy="100" r="31" fill="none" stroke="#fff" stroke-width="1" opacity="0.3" />
+              <circle cx="100" cy="100" r="5" fill="#121212" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Track Info -->
+      <div class="track-info">
+        <div class="track-title-row">
+          <h2 id="track-title">Sin canción seleccionada</h2>
+          <button id="btn-add-to-album" class="add-to-album-btn" title="Añadir a Álbum"><i data-lucide="plus" style="width:16px; height:16px;"></i></button>
+        </div>
+        <p id="track-artist">Añade música para empezar</p>
+      </div>
+
+      <!-- Seek Bar -->
+      <div class="slider-row">
+        <span id="current-time">0:00</span>
+        <input type="range" id="seek-bar" value="0" min="0" max="100" step="0.1">
+        <span id="total-duration">0:00</span>
+      </div>
+
+      <!-- Main Controls -->
+      <div class="controls">
+        <button id="btn-dj-mode" class="control-btn" title="Modo DJ Automático"><i data-lucide="wand-2"></i></button>
+        <button id="btn-shuffle" class="control-btn" title="Aleatorio"><i data-lucide="shuffle"></i></button>
+        <button id="btn-prev" class="control-btn" title="Anterior"><i data-lucide="skip-back"></i></button>
+        <button id="btn-play" class="control-btn play-btn" title="Reproducir/Pausar"><i data-lucide="play"></i></button>
+        <button id="btn-next" class="control-btn" title="Siguiente"><i data-lucide="skip-forward"></i></button>
+        <button id="btn-loop" class="control-btn" title="Repetir"><i data-lucide="repeat"></i></button>
+      </div>
+
+      <!-- Volume Control -->
+      <div class="slider-row volume-row">
+        <i data-lucide="volume-x" style="width:16px; height:16px;"></i>
+        <input type="range" id="volume-bar" value="1" min="0" max="1" step="0.01" title="Volumen">
+        <i data-lucide="volume-2" style="width:16px; height:16px;"></i>
+      </div>
+    </div>
+
+    <!-- PLAYLIST VIEW -->
+    <div id="view-playlist" class="view-section">
+      
+      <!-- Greeting & Song Count -->
+      <div class="greeting-area">
+        <h1 id="greeting-text" class="greeting-text">Buenas noches</h1>
+        <p id="song-count" class="song-count">0 canciones en tu biblioteca</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <i data-lucide="search"></i>
+        <input type="text" id="search-input" class="search-input" placeholder="Buscar canción, artista...">
+      </div>
+
+      <!-- Albums Tabs -->
+      <div class="albums-bar" id="albums-bar">
+        <button class="album-tab active">Todos</button>
+        <button class="album-tab">Mix</button>
+        <button class="album-tab">Álbumes</button>
+        <button class="album-tab">Artistas</button>
+        <button class="album-tab">Carpetas</button>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions-bar">
+        <button class="quick-action-btn" onclick="document.getElementById('file-upload').click()"><i data-lucide="file-audio"></i> Archivos</button>
+        <button class="quick-action-btn" onclick="document.getElementById('folder-upload').click()"><i data-lucide="folder-input"></i> Carpeta</button>
+        <button class="quick-action-btn" id="btn-quick-album"><i data-lucide="library"></i> Álbum</button>
+      </div>
+
+      <!-- Playlist Section -->
+      <div class="playlist-layout">
+        <div id="alphabet-sidebar" class="alphabet-sidebar"></div>
+        <ul id="playlist" class="playlist"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Album Modal -->
+  <div id="album-modal" class="modal-overlay hidden">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span>Seleccionar Álbum</span>
+        <button id="btn-close-modal" class="close-modal-btn"><i data-lucide="x"></i></button>
+      </div>
+      <div id="modal-album-list" class="modal-album-list"></div>
+    </div>
+  </div>
+
+  <script>
+    // ==========================================
+    // INITIALIZATION & STATE
+    // ==========================================
+    document.addEventListener('DOMContentLoaded', async () => {
+      if (window.lucide) lucide.createIcons();
+      loadThemeFromStorage();
+      loadCustomBgFromStorage();
+      loadAlbumsFromStorage();
+      renderAlphabetSidebar();
+      updateGreeting();
+      
+      try {
+        await initDB();
+        await loadTracksFromDB();
+      } catch (e) {
+        console.error("Error inicializando base de datos:", e);
+      }
+    });
+
+    // Funciones UI Generales
+    function updateGreeting() {
+      const hour = new Date().getHours();
+      let greeting = "Buenas noches";
+      if (hour >= 5 && hour < 12) greeting = "Buenos días";
+      else if (hour >= 12 && hour < 19) greeting = "Buenas tardes";
+      document.getElementById('greeting-text').textContent = greeting;
+    }
+
+    function updateSongCount() {
+      document.getElementById('song-count').textContent = `${allTracks.length} canciones en tu biblioteca`;
+    }
+
+    function showToast(message, icon = "info") {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<i data-lucide="${icon}"></i> <span>${message}</span>`;
+      container.appendChild(toast);
+      if (window.lucide) lucide.createIcons();
+      setTimeout(() => { toast.remove(); }, 3000);
+    }
+
+    // DOM Elements
+    const fileUpload = document.getElementById('file-upload');
+    const folderUpload = document.getElementById('folder-upload');
+    const bgUpload = document.getElementById('bg-upload');
+    const customBgLayer = document.getElementById('custom-bg-layer');
+    const playlistUI = document.getElementById('playlist');
+    const alphabetSidebar = document.getElementById('alphabet-sidebar');
+    const searchInput = document.getElementById('search-input');
+    
+    const trackTitle = document.getElementById('track-title');
+    const trackArtist = document.getElementById('track-artist');
+    const currentTimeEl = document.getElementById('current-time');
+    const totalDurationEl = document.getElementById('total-duration');
+    const seekBar = document.getElementById('seek-bar');
+    const volumeBar = document.getElementById('volume-bar');
+    const albumArtBox = document.getElementById('album-art-box');
+
+    const btnPlay = document.getElementById('btn-play');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const btnShuffle = document.getElementById('btn-shuffle');
+    const btnLoop = document.getElementById('btn-loop');
+    const btnDjMode = document.getElementById('btn-dj-mode');
+    const btnCreateAlbum = document.getElementById('btn-create-album');
+    const btnQuickAlbum = document.getElementById('btn-quick-album');
+    const btnAddToAlbum = document.getElementById('btn-add-to-album');
+    const btnClearLibrary = document.getElementById('btn-clear-library');
+    const albumsBar = document.getElementById('albums-bar');
+
+    const btnSettingsToggle = document.getElementById('btn-settings-toggle');
+    const settingsDropdown = document.getElementById('settings-dropdown');
+    const themeBtns = document.querySelectorAll('.theme-btn');
+
+    const tabPlayer = document.getElementById('tab-player');
+    const tabPlaylist = document.getElementById('tab-playlist');
+    const viewPlayer = document.getElementById('view-player');
+    const viewPlaylist = document.getElementById('view-playlist');
+
+    const albumModal = document.getElementById('album-modal');
+    const btnCloseModal = document.getElementById('btn-close-modal');
+    const modalAlbumList = document.getElementById('modal-album-list');
+
+    // State Variables
+    let allTracks = [];       
+    let currentPlaylist = []; 
+    let currentTrackIndex = -1;
+    let isPlaying = false;
+    let customAlbums = {};    
+    let activeAlbumKey = "todos";
+
+    // Playback modifiers
+    let masterVolume = 1.0;
+    let isShuffle = false;
+    let isLoop = false;
+    let isDjMode = false;
+
+    // Dual audio for DJ Crossfade
+    let audioA = new Audio();
+    let audioB = new Audio();
+    let activeAudio = audioA;
+    audioA.crossOrigin = "anonymous";
+    audioB.crossOrigin = "anonymous";
+
+    // ==========================================
+    // AUDIO VISUALIZER (BEAT DETECTION)
+    // ==========================================
+    let audioCtx;
+    let analyser;
+    let dataArray;
+    let visualizerInitialized = false;
+
+    function initVisualizer() {
+      if (visualizerInitialized) return;
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        analyser = audioCtx.createAnalyser();
+        analyser.fftSize = 256;
+        
+        // Connect both players to visualizer
+        const srcA = audioCtx.createMediaElementSource(audioA);
+        const srcB = audioCtx.createMediaElementSource(audioB);
+        srcA.connect(analyser);
+        srcB.connect(analyser);
+        analyser.connect(audioCtx.destination);
+        
+        dataArray = new Uint8Array(analyser.frequencyBinCount);
+        visualizerInitialized = true;
+        renderVisualizerFrame();
+      } catch (e) {
+        console.log("AudioContext initialization failed or blocked.", e);
+      }
+    }
+
+    function renderVisualizerFrame() {
+      requestAnimationFrame(renderVisualizerFrame);
+      if (!isPlaying) {
+        document.documentElement.style.setProperty('--beat-scale', 1);
+        document.documentElement.style.setProperty('--beat-glow-opacity', 0);
+        return;
+      }
+      
+      analyser.getByteFrequencyData(dataArray);
+      
+      // Focus on lower frequencies (Bass)
+      let bass = 0;
+      for (let i = 0; i < 6; i++) {
+        bass += dataArray[i];
+      }
+      bass = bass / 6;
+      
+      const normalizedBass = bass / 255;
+      // Scale between 1.0 and 1.15
+      const scale = 1 + (normalizedBass * 0.15);
+      // Glow opacity up to 0.7
+      const glow = normalizedBass * 0.7; 
+      
+      document.documentElement.style.setProperty('--beat-scale', scale);
+      document.documentElement.style.setProperty('--beat-glow-opacity', glow);
+    }
+
+    // Initialize context only on user interaction to comply with browser policies
+    function ensureAudioContext() {
+      if (!visualizerInitialized) initVisualizer();
+      if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    // ==========================================
+    // INDEXEDDB LOGIC (PERSISTENCE)
+    // ==========================================
+    let db;
+    const DB_NAME = 'AuraSyncDB';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'tracks';
+
+    function initDB() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onerror = (e) => reject("IndexedDB error");
+        request.onsuccess = (e) => { db = e.target.result; resolve(db); };
+        request.onupgradeneeded = (e) => {
+          if (!e.target.result.objectStoreNames.contains(STORE_NAME)) {
+            e.target.result.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
+      });
+    }
+
+    function saveTrackToDB(trackData) {
+      if (!db) return;
+      const transaction = db.transaction([STORE_NAME], 'readwrite');
+      transaction.objectStore(STORE_NAME).put({
+        id: trackData.id, title: trackData.title, artist: trackData.artist, file: trackData.file
+      });
+    }
+
+    function loadTracksFromDB() {
+      return new Promise((resolve) => {
+        if (!db) return resolve();
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const request = transaction.objectStore(STORE_NAME).getAll();
+
+        request.onsuccess = (e) => {
+          const storedTracks = e.target.result;
+          if (storedTracks && storedTracks.length > 0) {
+            storedTracks.forEach(track => {
+              allTracks.push({
+                id: track.id, title: track.title, artist: track.artist,
+                file: track.file, url: URL.createObjectURL(track.file)
+              });
+            });
+            allTracks.sort((a, b) => a.title.localeCompare(b.title));
+            updateSongCount();
+            switchAlbum(activeAlbumKey);
+            if (currentTrackIndex === -1 && currentPlaylist.length > 0) transitionToTrack(0, 2000);
+          }
+          resolve();
+        };
+      });
+    }
+
+    if (btnClearLibrary) {
+      btnClearLibrary.addEventListener('click', () => {
+        if (!confirm("¿Borrar toda tu música guardada localmente?")) return;
+        if (db) {
+          const transaction = db.transaction([STORE_NAME], 'readwrite');
+          transaction.objectStore(STORE_NAME).clear();
+        }
+        
+        allTracks = []; customAlbums = {}; saveAlbumsToStorage();
+        activeAlbumKey = 'todos'; currentPlaylist = []; currentTrackIndex = -1;
+        pauseTrack();
+        
+        trackTitle.textContent = "Sin canción seleccionada";
+        trackArtist.textContent = "Añade música para empezar";
+        let imgEl = albumArtBox.querySelector('img'); if (imgEl) imgEl.remove();
+        const defaultIcon = document.getElementById('default-art-icon'); if (defaultIcon) defaultIcon.style.opacity = '1';
+        
+        updateSongCount();
+        renderAlbumsBar();
+        renderPlaylist();
+        settingsDropdown.classList.remove('show');
+        showToast("Biblioteca eliminada", "trash");
+      });
+    }
+
+    // ==========================================
+    // THEMES & BACKGROUND
+    // ==========================================
+    function loadThemeFromStorage() {
+      const savedTheme = localStorage.getItem('aurasync_theme') || 'dark';
+      applyTheme(savedTheme, false);
+    }
+
+    function applyTheme(theme, save = true) {
+      document.body.setAttribute('data-theme', theme);
+      if (save) localStorage.setItem('aurasync_theme', theme);
+      themeBtns.forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector(`.theme-btn[data-theme="${theme}"]`);
+      if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    themeBtns.forEach(btn => { btn.addEventListener('click', (e) => applyTheme(e.target.dataset.theme)); });
+
+    function loadCustomBgFromStorage() {
+      const savedBg = localStorage.getItem('aurasync_custom_bg');
+      if (savedBg && customBgLayer) customBgLayer.style.backgroundImage = `url(${savedBg})`;
+    }
+
+    bgUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const b64 = event.target.result;
+        customBgLayer.style.backgroundImage = `url(${b64})`;
+        localStorage.setItem('aurasync_custom_bg', b64);
+        showToast("Fondo actualizado", "image");
+      };
+      reader.readAsDataURL(file);
+      settingsDropdown.classList.remove('show');
+    });
+
+    // Settings Dropdown
+    btnSettingsToggle.addEventListener('click', (e) => { e.stopPropagation(); settingsDropdown.classList.toggle('show'); });
+    document.addEventListener('click', (e) => { if (!settingsDropdown.contains(e.target) && !btnSettingsToggle.contains(e.target)) settingsDropdown.classList.remove('show'); });
+
+    // Tabs
+    tabPlayer.addEventListener('click', () => {
+      tabPlayer.classList.add('active'); tabPlaylist.classList.remove('active');
+      viewPlayer.classList.add('active'); viewPlaylist.classList.remove('active');
+    });
+    tabPlaylist.addEventListener('click', () => {
+      tabPlaylist.classList.add('active'); tabPlayer.classList.remove('active');
+      viewPlaylist.classList.add('active'); viewPlayer.classList.remove('active');
+    });
+
+    // ==========================================
+    // ALBUMS MANAGEMENT & SEARCH
+    // ==========================================
+    function loadAlbumsFromStorage() {
+      const saved = localStorage.getItem('aurasync_albums');
+      if (saved) { try { customAlbums = JSON.parse(saved); } catch (e) { customAlbums = {}; } }
+      renderAlbumsBar();
+    }
+    function saveAlbumsToStorage() { localStorage.setItem('aurasync_albums', JSON.stringify(customAlbums)); }
+
+    function handleCreateAlbum() {
+      settingsDropdown.classList.remove('show');
+      const albumName = prompt("Nombre de la nueva carpeta / álbum:");
+      if (!albumName) return;
+      const key = albumName.trim();
+      if (!key || customAlbums[key]) { alert("Nombre inválido o ya existe."); return; }
+      customAlbums[key] = []; saveAlbumsToStorage(); renderAlbumsBar(); switchAlbum(key);
+      showToast(`Álbum '${key}' creado`, "folder-plus");
+    }
+
+    btnCreateAlbum.addEventListener('click', handleCreateAlbum);
+    if (btnQuickAlbum) btnQuickAlbum.addEventListener('click', handleCreateAlbum);
+
+    function renderAlbumsBar() {
+      albumsBar.innerHTML = '';
+      const defaultCategories = ['Todos', 'Mix', 'Álbumes', 'Artistas', 'Carpetas'];
+      defaultCategories.forEach(cat => {
+        const btn = document.createElement('button');
+        const key = cat.toLowerCase();
+        btn.className = `album-tab ${activeAlbumKey === key ? 'active' : ''}`;
+        btn.textContent = cat;
+        btn.addEventListener('click', () => switchAlbum(key));
+        albumsBar.appendChild(btn);
+      });
+      Object.keys(customAlbums).forEach(albumKey => {
+        const btn = document.createElement('button');
+        btn.className = `album-tab ${activeAlbumKey === albumKey ? 'active' : ''}`;
+        btn.textContent = albumKey;
+        btn.addEventListener('click', () => switchAlbum(albumKey));
+        albumsBar.appendChild(btn);
+      });
+    }
+
+    function switchAlbum(key) {
+      activeAlbumKey = key;
+      renderAlbumsBar();
+      searchInput.value = ""; // reset search
+      
+      if (['todos', 'mix', 'álbumes', 'artistas', 'carpetas'].includes(key)) {
+        currentPlaylist = [...allTracks];
+      } else {
+        const trackIds = customAlbums[key] || [];
+        currentPlaylist = allTracks.filter(t => trackIds.includes(t.id));
+      }
+      renderPlaylist();
+    }
+
+    searchInput.addEventListener('input', (e) => {
+      renderPlaylist(e.target.value.toLowerCase());
+    });
+
+    // ==========================================
+    // UI: SIDEBAR & PLAYLIST RENDER
+    // ==========================================
+    function renderAlphabetSidebar() {
+      alphabetSidebar.innerHTML = '';
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('').forEach(letter => {
+        const btn = document.createElement('button');
+        btn.className = 'alpha-btn'; btn.textContent = letter;
+        btn.addEventListener('click', () => scrollToLetter(letter));
+        alphabetSidebar.appendChild(btn);
+      });
+    }
+
+    function scrollToLetter(letter) {
+      const index = currentPlaylist.findIndex(track => track.title.toUpperCase().startsWith(letter));
+      if (index !== -1 && playlistUI) {
+        const items = playlistUI.getElementsByClassName('playlist-item');
+        if (items[index]) {
+          items[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          items[index].style.borderColor = 'var(--accent-color)';
+          setTimeout(() => { items[index].style.borderColor = ''; }, 800);
+        }
+      }
+    }
+
+    function renderPlaylist(searchTerm = "") {
+      playlistUI.innerHTML = '';
+      let displayList = currentPlaylist;
+      
+      if (searchTerm) {
+        displayList = currentPlaylist.filter(t => 
+          t.title.toLowerCase().includes(searchTerm) || 
+          t.artist.toLowerCase().includes(searchTerm)
+        );
+      }
+      
+      if (displayList.length === 0) {
+        let actionStr = `document.getElementById('file-upload').click()`;
+        let ctaText = "Añadir Música"; let iconName = "music";
+        
+        if (activeAlbumKey === 'carpetas') { actionStr = `document.getElementById('folder-upload').click()`; ctaText = "Añadir Carpeta"; iconName = "folder-input"; } 
+        else if (activeAlbumKey !== 'todos' && activeAlbumKey !== 'mix') { ctaText = `Añadir a ${activeAlbumKey}`; iconName = "plus-circle"; }
+
+        playlistUI.innerHTML = `
+          <div class="empty-state">
+            <i data-lucide="${searchTerm ? 'search-x' : iconName}" class="empty-state-icon"></i>
+            <p class="empty-state-text">${searchTerm ? 'No se encontraron resultados' : 'No hay canciones aquí'}</p>
+            ${!searchTerm ? `<button class="empty-state-btn" onclick="${actionStr}"><i data-lucide="plus"></i> ${ctaText}</button>` : ''}
+          </div>
+        `;
+        if (window.lucide) lucide.createIcons();
+        return;
+      }
+
+      displayList.forEach((track) => {
+        const li = document.createElement('li');
+        const isActive = (allTracks[currentTrackIndex] && allTracks[currentTrackIndex].id === track.id);
+        li.className = `playlist-item ${isActive ? 'active' : ''}`;
+        li.innerHTML = `<span>${track.title}</span><small>${track.artist}</small>`;
+        li.addEventListener('click', () => {
+          ensureAudioContext();
+          const globalIndex = allTracks.findIndex(t => t.id === track.id);
+          if (globalIndex !== -1) transitionToTrack(globalIndex, 3000);
+        });
+        playlistUI.appendChild(li);
+      });
+    }
+
+    // ==========================================
+    // ADDING LOCAL FILES
+    // ==========================================
+    fileUpload.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+      files.forEach((file) => {
+        const trackId = Math.random().toString(36).substr(2, 9);
+        const newTrack = { id: trackId, title: file.name.replace(/\.[^/.]+$/, ""), artist: "Archivo Local", url: URL.createObjectURL(file), file: file };
+        allTracks.push(newTrack); saveTrackToDB(newTrack);
+      });
+      allTracks.sort((a, b) => a.title.localeCompare(b.title));
+      updateSongCount(); switchAlbum(activeAlbumKey);
+      if (currentTrackIndex === -1 && currentPlaylist.length > 0) transitionToTrack(0, 2000);
+      settingsDropdown.classList.remove('show');
+      showToast(`${files.length} pistas añadidas`, 'check-circle');
+    });
+
+    folderUpload.addEventListener('change', (e) => {
+      const files = Array.from(e.target.files);
+      if (files.length === 0) return;
+      let lastAddedFolder = "";
+      files.forEach((file) => {
+        if (file.type && !file.type.startsWith('audio/')) return;
+        const pathParts = file.webkitRelativePath.split('/');
+        const folderName = pathParts.length > 1 ? pathParts[0] : "Nueva Carpeta";
+        lastAddedFolder = folderName;
+        const trackId = Math.random().toString(36).substr(2, 9);
+        const newTrack = { id: trackId, title: file.name.replace(/\.[^/.]+$/, ""), artist: folderName, url: URL.createObjectURL(file), file: file };
+        allTracks.push(newTrack); saveTrackToDB(newTrack);
+        if (!customAlbums[folderName]) customAlbums[folderName] = [];
+        customAlbums[folderName].push(trackId);
+      });
+      allTracks.sort((a, b) => a.title.localeCompare(b.title));
+      saveAlbumsToStorage(); updateSongCount();
+      if (lastAddedFolder) switchAlbum(lastAddedFolder); else switchAlbum('todos');
+      if (currentTrackIndex === -1 && currentPlaylist.length > 0) transitionToTrack(0, 2000);
+      showToast(`Carpeta cargada con éxito`, 'check-circle');
+    });
+
+    // ==========================================
+    // DEEZER ALBUM ART
+    // ==========================================
+    function fetchAlbumArtDeezer(query) {
+      return new Promise((resolve) => {
+        if (!navigator.onLine) return resolve(null);
+        let cleanQuery = query.replace(/[-_]/g, ' ').replace(/\([^)]*\)/g, '').replace(/\[[^\]]*\]/g, '').replace(/\b(vevo|official|video|audio|lyrics|lyric|hd|hq|live|remix|mv|topic)\b/gi, '');
+        const words = cleanQuery.split(/\s+/); cleanQuery = [...new Set(words.map(w => w.toLowerCase()))].join(' ');
+        if (!cleanQuery) return resolve(null);
+        const callbackName = 'deezerJsonp_' + Math.floor(Math.random() * 1000000);
+        const script = document.createElement('script');
+        window[callbackName] = function(data) {
+          delete window[callbackName]; if (document.body.contains(script)) document.body.removeChild(script);
+          if (data && data.data && data.data.length > 0) resolve(data.data[0].album.cover_xl || data.data[0].album.cover_big);
+          else resolve(null);
+        };
+        script.src = `https://api.deezer.com/search?q=${encodeURIComponent(cleanQuery)}&output=jsonp&callback=${callbackName}`;
+        script.onerror = () => { delete window[callbackName]; if (document.body.contains(script)) document.body.removeChild(script); resolve(null); };
+        document.body.appendChild(script);
+      });
+    }
+
+    async function updateAlbumArtDisplay(title) {
+      let imgEl = albumArtBox.querySelector('img');
+      if (!imgEl) {
+        imgEl = document.createElement('img'); imgEl.style.borderRadius = 'inherit'; imgEl.style.opacity = '0';
+        albumArtBox.appendChild(imgEl);
+      }
+      const defaultIcon = document.getElementById('default-art-icon');
+      const artworkUrl = await fetchAlbumArtDeezer(title);
+      if (artworkUrl) { imgEl.src = artworkUrl; imgEl.onload = () => { imgEl.style.opacity = '1'; if (defaultIcon) defaultIcon.style.opacity = '0'; }; } 
+      else { imgEl.style.opacity = '0'; if (defaultIcon) defaultIcon.style.opacity = '1'; }
+    }
+
+    // ==========================================
+    // AUDIO ENGINE & DJ LOGIC
+    // ==========================================
+    function findSimilarTrack(currentTrack) {
+      if (allTracks.length <= 1) return -1;
+      const getKeywords = (str) => { if (!str) return []; return str.toLowerCase().replace(/[^a-z0-9áéíóúñ ]/g, '').split(/\s+/).filter(w => w.length > 3); };
+      const currentKeywords = [...getKeywords(currentTrack.title), ...getKeywords(currentTrack.artist)];
+      let bestMatchIndex = -1; let highestScore = -1;
+      allTracks.forEach((track, index) => {
+        if (track.id === currentTrack.id) return;
+        let score = 0;
+        if (track.artist.toLowerCase() === currentTrack.artist.toLowerCase()) score += 10;
+        const trackKeywords = [...getKeywords(track.title), ...getKeywords(track.artist)];
+        currentKeywords.forEach(kw => { if (trackKeywords.includes(kw)) score += 3; });
+        score += Math.random(); 
+        if (score > highestScore) { highestScore = score; bestMatchIndex = index; }
+      });
+      if (highestScore < 1) return Math.floor(Math.random() * allTracks.length);
+      return bestMatchIndex;
+    }
+
+    function getNextIndex(direction = 1) {
+      if (allTracks.length === 0) return -1;
+      const currentTrack = allTracks[currentTrackIndex];
+      if (isDjMode && direction === 1 && currentTrack) return findSimilarTrack(currentTrack);
+      if (currentPlaylist.length === 0) return -1;
+      
+      const currentInPlaylist = currentPlaylist.findIndex(t => t.id === allTracks[currentTrackIndex]?.id);
+      let nextInPlaylist = currentInPlaylist;
+      if (isShuffle && currentPlaylist.length > 1) {
+        while (nextInPlaylist === currentInPlaylist) nextInPlaylist = Math.floor(Math.random() * currentPlaylist.length);
+      } else {
+        nextInPlaylist = (currentInPlaylist + direction + currentPlaylist.length) % currentPlaylist.length;
+      }
+      return allTracks.findIndex(t => t.id === currentPlaylist[nextInPlaylist].id);
+    }
+
+    function transitionToTrack(index, fadeDuration = 8000) {
+      if (index < 0 || index >= allTracks.length) return;
+      currentTrackIndex = index;
+      const track = allTracks[currentTrackIndex];
+      trackTitle.textContent = track.title; trackArtist.textContent = track.artist;
+      renderPlaylist(searchInput.value);
+      updateAlbumArtDisplay(track.title);
+
+      const outgoingAudio = activeAudio;
+      const incomingAudio = (activeAudio === audioA) ? audioB : audioA;
+      activeAudio = incomingAudio;
+
+      incomingAudio.src = track.url;
+      incomingAudio.volume = 0;
+      incomingAudio.currentTime = 0;
+      incomingAudio._fadingOut = false;
+      incomingAudio.loop = isLoop; 
+      
+      incomingAudio.play().catch(e => console.log("Play bloqueado", e));
+      isPlaying = true; updatePlayButton();
+
+      let steps = 60; let stepTime = fadeDuration / steps; let currentStep = 0;
+      let fadeInterval = setInterval(() => {
+        currentStep++; let progress = currentStep / steps;
+        incomingAudio.volume = Math.min(1, progress) * masterVolume;
+        if (!outgoingAudio.paused) outgoingAudio.volume = Math.max(0, 1 - progress) * masterVolume;
+        if (currentStep >= steps) { clearInterval(fadeInterval); if (!outgoingAudio.paused) { outgoingAudio.pause(); outgoingAudio.currentTime = 0; } }
+      }, stepTime);
+    }
+
+    function playTrack() {
+      if (allTracks.length === 0) return;
+      if (currentTrackIndex === -1) currentTrackIndex = 0;
+      if (activeAudio.paused) { activeAudio.play(); isPlaying = true; } 
+      else transitionToTrack(currentTrackIndex, 2000);
+      updatePlayButton();
+    }
+
+    function pauseTrack() { activeAudio.pause(); isPlaying = false; updatePlayButton(); }
+
+    function updatePlayButton() {
+      btnPlay.innerHTML = isPlaying ? '<i data-lucide="pause"></i>' : '<i data-lucide="play"></i>';
+      isPlaying ? albumArtBox.classList.add('playing') : albumArtBox.classList.remove('playing');
+      if (window.lucide) lucide.createIcons();
+    }
+
+    btnPlay.addEventListener('click', () => { ensureAudioContext(); isPlaying ? pauseTrack() : playTrack(); });
+    btnNext.addEventListener('click', () => { ensureAudioContext(); const nextId = getNextIndex(1); if(nextId !== -1) transitionToTrack(nextId, 4000); });
+    btnPrev.addEventListener('click', () => { ensureAudioContext(); const prevId = getNextIndex(-1); if(prevId !== -1) transitionToTrack(prevId, 4000); });
+
+    btnDjMode.addEventListener('click', () => {
+      isDjMode = !isDjMode; btnDjMode.classList.toggle('active-state', isDjMode);
+      if (isDjMode) { isShuffle = false; btnShuffle.classList.remove('active-state'); showToast("Modo DJ Activado", "wand-2"); }
+      else { showToast("Modo DJ Desactivado", "wand-2"); }
+    });
+
+    btnShuffle.addEventListener('click', () => {
+      isShuffle = !isShuffle; btnShuffle.classList.toggle('active-state', isShuffle);
+      if (isShuffle) { isDjMode = false; btnDjMode.classList.remove('active-state'); showToast("Modo Aleatorio", "shuffle"); }
+    });
+
+    btnLoop.addEventListener('click', () => {
+      isLoop = !isLoop; btnLoop.classList.toggle('active-state', isLoop);
+      audioA.loop = isLoop; audioB.loop = isLoop;
+      showToast(isLoop ? "Repetir 1 activado" : "Repetir desactivado", "repeat");
+    });
+
+    volumeBar.addEventListener('input', (e) => {
+      masterVolume = parseFloat(e.target.value);
+      if (!activeAudio._fadingOut) activeAudio.volume = masterVolume;
+    });
+
+    seekBar.addEventListener('input', () => { if(activeAudio && !isNaN(activeAudio.duration)) activeAudio.currentTime = seekBar.value; });
+
+    audioA.addEventListener('timeupdate', () => checkAutoCrossfade(audioA));
+    audioB.addEventListener('timeupdate', () => checkAutoCrossfade(audioB));
+
+    function checkAutoCrossfade(sourceAudio) {
+      if (sourceAudio === activeAudio && !isNaN(sourceAudio.duration)) {
+        seekBar.max = sourceAudio.duration; seekBar.value = sourceAudio.currentTime;
+        currentTimeEl.textContent = formatTime(sourceAudio.currentTime);
+        totalDurationEl.textContent = formatTime(sourceAudio.duration);
+        const timeLeft = sourceAudio.duration - sourceAudio.currentTime;
+        if (!isLoop && timeLeft <= 8 && timeLeft > 0 && !sourceAudio._fadingOut && currentPlaylist.length > 1) {
+          sourceAudio._fadingOut = true; const nextIndex = getNextIndex(1); if(nextIndex !== -1) transitionToTrack(nextIndex, 8000);
+        }
+      }
+    }
+
+    function formatTime(seconds) {
+      if (isNaN(seconds)) return "0:00";
+      const min = Math.floor(seconds / 60); const sec = Math.floor(seconds % 60);
+      return `${min}:${sec < 10 ? '0' : ''}${sec}`;
+    }
+
+    // Modal Album additions
+    btnAddToAlbum.addEventListener('click', () => {
+      if (currentTrackIndex < 0 && allTracks.length > 0) currentTrackIndex = 0;
+      if (allTracks.length === 0) { alert("Primero añade música."); return; }
+      if (Object.keys(customAlbums).length === 0) { customAlbums["Favoritas"] = []; saveAlbumsToStorage(); renderAlbumsBar(); }
+      modalAlbumList.innerHTML = '';
+      Object.keys(customAlbums).forEach(key => {
+        const btn = document.createElement('button'); btn.className = 'modal-album-btn'; btn.innerHTML = `<i data-lucide="folder"></i> <span>${key}</span>`;
+        btn.addEventListener('click', () => {
+          const currentTrack = allTracks[currentTrackIndex >= 0 ? currentTrackIndex : 0];
+          if (currentTrack && !customAlbums[key].includes(currentTrack.id)) {
+            customAlbums[key].push(currentTrack.id); saveAlbumsToStorage(); switchAlbum(activeAlbumKey);
+            showToast(`Añadida a ${key}`, "check");
+          }
+          closeModal();
+        });
+        modalAlbumList.appendChild(btn);
+      });
+      if (window.lucide) lucide.createIcons(); albumModal.classList.remove('hidden');
+    });
+
+    btnCloseModal.addEventListener('click', closeModal);
+    albumModal.addEventListener('click', (e) => { if (e.target === albumModal) closeModal(); });
+    function closeModal() { albumModal.classList.add('hidden'); }
+  </script>
+</body>
+</html>
